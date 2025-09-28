@@ -7,10 +7,10 @@ const chip = (label) =>
     label === "garbage"
         ? "bg-red-100 text-red-700 dark:bg-red-400/20 dark:text-red-300"
         : label === "paper"
-            ? "bg-gray-100 text-gray-700 dark:bg-white/10 dark:text-gray-300"
+            ? "bg-amber-100 text-amber-800 dark:bg-amber-400/20 dark:text-amber-300"
             : label === "plastic"
                 ? "bg-amber-100 text-amber-800 dark:bg-amber-400/20 dark:text-amber-300"
-                : "bg-blue-100 text-blue-700 dark:bg-blue-400/20 dark:text-blue-300";
+                : "bg-gray-100 text-gray-700 dark:bg-white/10 dark:text-gray-300";
 
 export default function HistoryList({ items }) {
     const [rangeKey, setRangeKey] = useState(() => localStorage.getItem( "24h")); // default last 24
