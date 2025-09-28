@@ -1,0 +1,6 @@
+@import "tailwindcss";
+
+/* Tailwind v4: enable manual dark via `.dark` anywhere up the tree */
+@custom-variant dark (&:where(.dark, .dark *));
+
+html, body, #root { height: 100%; }
