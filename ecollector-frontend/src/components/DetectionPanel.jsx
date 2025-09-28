@@ -1,8 +1,8 @@
 import React from "react";
 
 const COLOR_BY_LABEL = {
-    garbage: { dot: "bg-red-500",   chip: "bg-red-100 text-red-700",     bar: "bg-red-500" },
-    paper: { dot: "bg-amber-500", chip: "bg-amber-100 text-amber-800", bar: "bg-amber-500" },
+    garbage: { dot: "bg-green-500",   chip: "bg-green-100 text-green-700",     bar: "bg-green-500" },
+    paper: { dot: "bg-orange-500", chip: "bg-orange-100 text-orange-800", bar: "bg-orange-500" },
     plastic:   { dot: "bg-blue-500",  chip: "bg-blue-100 text-blue-700",   bar: "bg-blue-500" }
 };
 const DEFAULT_COLORS = { dot: "bg-gray-400", chip: "bg-gray-100 text-gray-700", bar: "bg-emerald-500" };

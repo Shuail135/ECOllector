@@ -75,8 +75,8 @@ export default function TotalsPanel({ totals, pct, selectedRangeKey, onChangeRan
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <Stat title="Garbage" value={totals.garbage} pct={pct.garbage} ring="bg-red-400" />
-                <Stat title="Paper" value={totals.paper} pct={pct.paper} ring="bg-amber-400" />
+                <Stat title="Garbage" value={totals.garbage} pct={pct.garbage} ring="bg-green-400" />
+                <Stat title="Paper" value={totals.paper} pct={pct.paper} ring="bg-orange-400" />
                 <Stat title="Plastic"   value={totals.plastic}   pct={pct.plastic}   ring="bg-blue-400" />
             </div>
 
