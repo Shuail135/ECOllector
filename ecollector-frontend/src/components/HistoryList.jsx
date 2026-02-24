@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useEffect } from "react";
-
 import { TIME_WINDOWS } from "../lib/timeRanges";
+
 const PAGE_SIZE = 10;
 
 const chip = (label) =>
@@ -13,31 +13,38 @@ const chip = (label) =>
                 : "bg-gray-100 text-gray-700 dark:bg-white/10 dark:text-gray-300";
 
 export default function HistoryList({ items }) {
-    const [rangeKey, setRangeKey] = useState(() => localStorage.getItem( "24h")); // default last 24
+    const [rangeKey, setRangeKey] = useState(
+        () => localStorage.getItem("historyRange") || "24h"
+    );
+
     const [open, setOpen] = useState(false);
     const [page, setPage] = useState(1);
 
-    // Persist selected range
     useEffect(() => {
         localStorage.setItem("historyRange", rangeKey);
     }, [rangeKey]);
 
-    // Derived, filtered + sorted items
     const filtered = useMemo(() => {
-        const win = TIME_WINDOWS.find((w) => w.key === rangeKey) ?? TIME_WINDOWS[1];
+        const win =
+            TIME_WINDOWS.find((w) => w.key === rangeKey) ??
+            TIME_WINDOWS.find((w) => w.key === "24h") ??
+            TIME_WINDOWS[0];
+
         const now = Date.now();
+
         return (items || [])
-            .filter((it) => (win.ms ? (it.ts ?? it.timestamp) >= now - win.ms : true))
+            .filter((it) => {
+                const ts = it.ts ?? it.timestamp;
+                return win.ms ? ts >= now - win.ms : true;
+            })
             .sort((a, b) => (b.ts ?? b.timestamp) - (a.ts ?? a.timestamp));
     }, [items, rangeKey]);
 
-    // Pagination
     const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
     const currentPage = Math.min(Math.max(page, 1), totalPages);
     const startIdx = (currentPage - 1) * PAGE_SIZE;
     const pageItems = filtered.slice(startIdx, startIdx + PAGE_SIZE);
 
-    // Reset page when range changes or list > current page limit
     useEffect(() => {
         setPage(1);
     }, [rangeKey]);
@@ -56,7 +63,8 @@ export default function HistoryList({ items }) {
                         aria-haspopup="listbox"
                         aria-expanded={open}
                     >
-                        {TIME_WINDOWS.find((w) => w.key === rangeKey)?.label ?? "Last 24 hours"}
+                        {TIME_WINDOWS.find((w) => w.key === rangeKey)?.label ??
+                            "Last 24 hours"}
                         <svg className="h-4 w-4 opacity-70" viewBox="0 0 20 20" fill="currentColor">
                             <path
                                 fillRule="evenodd"
@@ -77,6 +85,7 @@ export default function HistoryList({ items }) {
                                     return (
                                         <li key={w.key}>
                                             <button
+                                                type="button"
                                                 className={
                                                     "w-full text-left px-3 py-2 text-sm transition " +
                                                     (active
@@ -103,7 +112,9 @@ export default function HistoryList({ items }) {
 
             {/* List */}
             {pageItems.length === 0 ? (
-                <div className="text-gray-600 dark:text-gray-300">No detections in this range.</div>
+                <div className="text-gray-600 dark:text-gray-300">
+                    No detections in this range.
+                </div>
             ) : (
                 <>
                     <ul className="divide-y divide-gray-200/70 dark:divide-white/10">
@@ -115,12 +126,17 @@ export default function HistoryList({ items }) {
                                 minute: "2-digit",
                                 hour12: true,
                             })}`;
+
                             return (
                                 <li key={`${ts}-${idx}`} className="py-3 flex items-center justify-between">
                                     <div className="text-sm text-gray-700 dark:text-gray-200">{formatted}</div>
                                     <div className="flex items-center gap-3">
-                                        <span className={`px-2 py-0.5 rounded-full text-xs ${chip(it.label)}`}>{it.label}</span>
-                                        <span className="text-sm text-gray-700 dark:text-gray-200">{it.confidence}%</span>
+                    <span className={`px-2 py-0.5 rounded-full text-xs ${chip(it.label)}`}>
+                      {it.label}
+                    </span>
+                                        <span className="text-sm text-gray-700 dark:text-gray-200">
+                      {it.confidence}%
+                    </span>
                                     </div>
                                 </li>
                             );
@@ -130,7 +146,8 @@ export default function HistoryList({ items }) {
                     {/* Pagination footer */}
                     <div className="mt-4 flex items-center justify-between text-sm">
                         <div className="text-gray-600 dark:text-gray-300">
-                            Showing {startIdx + 1}-{Math.min(startIdx + PAGE_SIZE, filtered.length)} of {filtered.length}
+                            Showing {startIdx + 1}-{Math.min(startIdx + PAGE_SIZE, filtered.length)} of{" "}
+                            {filtered.length}
                         </div>
                         <div className="flex items-center gap-2">
                             <button
@@ -158,7 +175,7 @@ export default function HistoryList({ items }) {
             )}
 
             <p className="mt-4 text-xs text-gray-600 dark:text-gray-300">
-                TEMP history — Refresh will clear it.
+                Live history from database.
             </p>
         </div>
     );

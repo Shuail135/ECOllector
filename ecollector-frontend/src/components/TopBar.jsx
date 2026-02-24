@@ -15,7 +15,6 @@ export default function TopBar({ dark, toggleDark }) {
                         <h1 className="text-lg md:text-xl font-semibold text-gray-800 dark:text-white leading-tight">
                             ECOllector
                         </h1>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">Demo UI — no backend</p>
                     </div>
                 </div>
 
