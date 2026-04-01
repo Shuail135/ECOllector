@@ -10,7 +10,7 @@ function SolutionSection() {
     <section id="solution" className="section-shell scroll-mt-28 pb-20 md:scroll-mt-32">
       <SectionIntro
         eyebrow="The Solution"
-        title="An intelligent waste-sorting system for real-time sorting"
+        title="An intelligent waste-sorting system in real-time"
         description="ECOllector integrates detection, classification, actuation, and analytics into a continuous system that detects, sorts, and tracks waste in real time."
       />
 
