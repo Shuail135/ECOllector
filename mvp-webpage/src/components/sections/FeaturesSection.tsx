@@ -7,7 +7,7 @@ import SectionIntro from "../ui/SectionIntro";
 
 function FeaturesSection() {
   return (
-    <section id="features" className="section-shell pb-20">
+    <section id="features" className="section-shell scroll-mt-28 pb-20 md:scroll-mt-32">
       <SectionIntro
         eyebrow="Features"
         title="Built for real-time, reliable sorting"

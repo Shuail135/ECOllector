@@ -7,7 +7,7 @@ import SectionIntro from "../ui/SectionIntro";
 
 function SolutionSection() {
   return (
-    <section id="solution" className="section-shell pb-20">
+    <section id="solution" className="section-shell scroll-mt-28 pb-20 md:scroll-mt-32">
       <SectionIntro
         eyebrow="The Solution"
         title="An intelligent waste-sorting system for real-time sorting"

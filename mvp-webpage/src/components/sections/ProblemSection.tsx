@@ -8,7 +8,7 @@ function ProblemSection() {
   return (
     <motion.section
       id="problem"
-      className="section-shell pb-20"
+      className="section-shell scroll-mt-28 pb-20 md:scroll-mt-32"
       initial="hidden"
       whileInView="show"
       viewport={{ once: true, amount: 0.25 }}

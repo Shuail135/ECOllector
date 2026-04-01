@@ -7,7 +7,7 @@ function DashboardSection() {
   return (
     <motion.section
       id="dashboard"
-      className="section-shell pb-20"
+      className="section-shell scroll-mt-28 pb-20 md:scroll-mt-32"
       initial="hidden"
       whileInView="show"
       viewport={{ once: true, amount: 0.2 }}

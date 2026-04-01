@@ -9,7 +9,7 @@ function FinalCtaSection() {
   ];
 
   return (
-    <section id="final-cta" className="section-shell pb-20">
+    <section id="final-cta" className="section-shell scroll-mt-28 pb-20 md:scroll-mt-32">
       <motion.div
         initial="hidden"
         whileInView="show"
@@ -39,8 +39,28 @@ function FinalCtaSection() {
           ))}
         </div>
         <div className="mt-10 flex justify-center">
-          <a href="#dashboard" className="primary-cta">
+          <a
+            href="https://ecollector-webapp.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Opens live system dashboard"
+            className="primary-cta group gap-2 hover:scale-[1.03] hover:shadow-[0_20px_48px_rgba(15,23,42,0.28)]"
+          >
             View Live Dashboard
+            <svg
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+              className="h-4 w-4 transition duration-300 ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+            >
+              <path
+                d="M14 5h5v5M10 14l9-9M19 14v4a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h4"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
           </a>
         </div>
         </div>

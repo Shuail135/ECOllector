@@ -2,6 +2,7 @@ node_modules/
 dist/
 .vite/
 coverage/
+.vercel/
 
 .DS_Store
 Thumbs.db
@@ -11,6 +12,7 @@ Thumbs.db
 .env
 .env.*
 !.env.example
+*.local
 
 npm-debug.log*
 yarn-debug.log*
@@ -18,3 +20,4 @@ yarn-error.log*
 pnpm-debug.log*
 
 *.tsbuildinfo
+.eslintcache

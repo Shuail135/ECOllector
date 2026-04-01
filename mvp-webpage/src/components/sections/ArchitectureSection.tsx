@@ -32,7 +32,7 @@ const architectureColumns = [
 
 function ArchitectureSection() {
   return (
-    <section id="architecture" className="section-shell pb-20">
+    <section id="architecture" className="section-shell scroll-mt-28 pb-20 md:scroll-mt-32">
       <SectionIntro
         eyebrow="System Architecture"
         title="End-to-end system architecture"

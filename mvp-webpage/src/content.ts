@@ -3,14 +3,12 @@ export type FeatureCardIcon = "ai" | "route" | "chart" | "target";
 export type WorkflowCardIcon = "camera" | "ai" | "route" | "chart";
 
 export const navItems = [
-  { label: "Home", href: "#top" },
-  { label: "Problem", href: "#problem" },
-  { label: "Solution", href: "#solution" },
-  { label: "Features", href: "#features" },
-  { label: "Architecture", href: "#architecture" },
-  { label: "Dashboard", href: "#dashboard" },
-  { label: "Impact", href: "#impact" },
-  { label: "CTA", href: "#final-cta" },
+  { label: "Home", href: "#top", sectionId: "top" },
+  { label: "Problem", href: "#problem", sectionId: "problem" },
+  { label: "Solution", href: "#solution", sectionId: "solution" },
+  { label: "Architecture", href: "#architecture", sectionId: "architecture" },
+  { label: "Dashboard", href: "#dashboard", sectionId: "dashboard" },
+  { label: "Impact", href: "#impact", sectionId: "impact" },
 ];
 
 export const problemCards = [

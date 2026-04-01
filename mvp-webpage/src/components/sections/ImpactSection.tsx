@@ -5,7 +5,7 @@ import SectionIntro from "../ui/SectionIntro";
 
 function ImpactSection() {
   return (
-    <section id="impact" className="section-shell pb-20">
+    <section id="impact" className="section-shell scroll-mt-28 pb-20 md:scroll-mt-32">
       <SectionIntro
         eyebrow="Impact"
         title="Built for smarter waste management"
@@ -25,8 +25,8 @@ function ImpactSection() {
           <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#27292b]">
             Classification accuracy
           </p>
-          <p className="mt-3 text-3xl font-extrabold tracking-[-0.05em] text-ink">98%</p>
-          <p className="mt-2 text-sm leading-7 text-[#27292b]">Classification accuracy</p>
+          <p className="mt-3 text-3xl font-extrabold tracking-[-0.05em] text-ink">97.8%</p>
+          <p className="mt-2 text-sm leading-7 text-[#27292b]">Measured accuracy under controlled testing conditions.</p>
         </motion.div>
         <motion.div
           custom={0.08}
@@ -39,10 +39,10 @@ function ImpactSection() {
           className="panel bg-white/90 p-5 transition duration-300 ease-out will-change-transform hover:border-slate-300 hover:shadow-[0_24px_48px_rgba(15,23,42,0.12)]"
         >
           <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#27292b]">
-            Contamination reduction
+            Processing speed
           </p>
-          <p className="mt-3 text-3xl font-extrabold tracking-[-0.05em] text-ink">40%</p>
-          <p className="mt-2 text-sm leading-7 text-[#27292b]">Contamination reduction</p>
+          <p className="mt-3 text-3xl font-extrabold tracking-[-0.05em] text-ink">&lt; 5s</p>
+          <p className="mt-2 text-sm leading-7 text-[#27292b]">Time required to detect, classify, and route each item.</p>
         </motion.div>
         <motion.div
           custom={0.16}
@@ -57,8 +57,8 @@ function ImpactSection() {
           <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#27292b]">
             System tracking
           </p>
-          <p className="mt-3 text-3xl font-extrabold tracking-[-0.05em] text-ink">Real-time</p>
-          <p className="mt-2 text-sm leading-7 text-[#27292b]">Real-time system tracking</p>
+          <p className="mt-3 text-3xl font-extrabold tracking-[-0.05em] text-ink">24h</p>
+          <p className="mt-2 text-sm leading-7 text-[#27292b]">Continuous data availability through the web application.</p>
         </motion.div>
       </div>
       <div className="mt-12 grid gap-5 md:grid-cols-3">
