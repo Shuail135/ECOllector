@@ -5,7 +5,7 @@ function ProductHeroMedia() {
     <div className="relative">
       <div className="absolute inset-x-10 top-10 -z-10 h-[78%] rounded-[36px] bg-[radial-gradient(circle,rgba(59,130,246,0.16),transparent_48%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.14),transparent_36%)] blur-3xl" />
       <div className="panel relative overflow-hidden p-5 md:p-6">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.10),transparent_28%),radial-gradient(circle_at_bottom_left,rgba(16,185,129,0.10),transparent_30%)]" />
+        <div className="absolute inset-0 animate-[ambient-gradient-shift_16s_ease-in-out_infinite] bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.10),transparent_28%),radial-gradient(circle_at_bottom_left,rgba(16,185,129,0.10),transparent_30%)] bg-[length:140%_140%]" />
         <div className="relative">
           <div className="overflow-hidden rounded-[28px] border border-slate-200 bg-white/90 p-3 shadow-soft">
             <div className="relative overflow-hidden rounded-[22px] bg-slate-100">

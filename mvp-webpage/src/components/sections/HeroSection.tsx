@@ -21,11 +21,9 @@ function HeroSection({ heroOpacity, heroYOffset }: HeroSectionProps) {
         <h1 className="mt-6 max-w-[11ch] text-5xl font-extrabold leading-[0.94] tracking-[-0.07em] text-ink md:text-7xl">
           Identify, sort, and track waste automatically.
         </h1>
-        <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-600">
-          ECOllector captures each item at the bin, classifies it as plastic,
-          paper, or garbage, routes it through a servo-based mechanism, and logs
-          every result to a live analytics dashboard for cleaner sorting and
-          measurable disposal data.
+        <p className="mt-6 max-w-2xl text-lg leading-8 text-[#27292b]">
+          ECOllector detects, classifies, and routes waste in real time.
+          Every sorting event is logged to a live dashboard for full system visibility.
         </p>
 
         <div className="mt-8 flex flex-col gap-3 sm:flex-row">
@@ -36,6 +34,10 @@ function HeroSection({ heroOpacity, heroYOffset }: HeroSectionProps) {
             Explore System
           </a>
         </div>
+
+        <p className="mt-5 max-w-2xl text-sm leading-7 text-[#27292b]">
+          Built with computer vision and embedded control systems. Prototype tested in real environments.
+        </p>
 
         <div className="mt-10 grid gap-3 sm:grid-cols-3">
           <StatPill

@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { solutionCapabilityCards } from "../../content";
-import { fadeUp } from "../../lib/motion";
+import { fadeUp, hoverLift, hoverTransition } from "../../lib/motion";
 import { panelHoverClass } from "../../lib/uiClasses";
 import { SolutionIcon } from "../ui/Icons";
 import SectionIntro from "../ui/SectionIntro";
@@ -11,7 +11,7 @@ function SolutionSection() {
       <SectionIntro
         eyebrow="The Solution"
         title="An intelligent waste-sorting system for real-time sorting"
-        description="ECOllector integrates perception, decision-making, actuation, and analytics into a continuous system that detects, sorts, and tracks waste in real time."
+        description="ECOllector integrates detection, classification, actuation, and analytics into a continuous system that detects, sorts, and tracks waste in real time."
       />
 
       <motion.div
@@ -28,8 +28,8 @@ function SolutionSection() {
             initial="hidden"
             whileInView="show"
             viewport={{ once: true, amount: 0.2 }}
-            whileHover={{ y: -6 }}
-            transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
+            whileHover={hoverLift}
+            transition={hoverTransition}
             className={`panel relative p-6 ${card.tone} ${panelHoverClass}`}
           >
             <div className="flex items-center gap-3">
@@ -44,7 +44,7 @@ function SolutionSection() {
               </span>
             </div>
             <h3 className="mt-10 text-xl font-extrabold tracking-[-0.03em] text-ink">{card.title}</h3>
-            <p className="mt-4 text-base leading-8 text-slate-600">{card.description}</p>
+            <p className="mt-4 text-base leading-8 text-[#27292b]">{card.description}</p>
           </motion.article>
         ))}
       </motion.div>

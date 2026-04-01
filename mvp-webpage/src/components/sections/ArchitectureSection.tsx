@@ -36,7 +36,7 @@ function ArchitectureSection() {
       <SectionIntro
         eyebrow="System Architecture"
         title="End-to-end system architecture"
-        description="From sensing and intelligence to control, actuation, and reporting, ECOllector connects the full sorting pipeline in real time."
+        description="From sensing to reporting, ECOllector connects the full sorting pipeline into one continuous system."
       />
       <motion.div
         initial={{ opacity: 0, y: 30, filter: "blur(4px)" }}
@@ -50,16 +50,15 @@ function ArchitectureSection() {
           <div className="relative">
             <div className="flex flex-col gap-3 border-b border-slate-200 pb-5 md:flex-row md:items-end md:justify-between">
               <div>
-                <p className="text-xs font-bold uppercase tracking-[0.22em] text-slate-500">
+                <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#27292b]">
                   Perception To Action
                 </p>
                 <h3 className="mt-3 text-2xl font-extrabold tracking-[-0.04em] text-ink md:text-3xl">
                   One clear path from input to reporting
                 </h3>
               </div>
-              <p className="max-w-2xl text-sm leading-7 text-slate-600 md:text-right">
-                Sensor input, AI processing, hardware control, sorting actuation, and software reporting
-                are connected as one continuous product system.
+              <p className="max-w-2xl text-sm leading-7 text-[#27292b] md:text-right">
+                Sensor input, AI processing, hardware control, actuation, and reporting work together as a unified system.
               </p>
             </div>
 

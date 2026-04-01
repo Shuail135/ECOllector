@@ -10,11 +10,11 @@ function SiteHeader() {
           </div>
           <div>
             <p className="text-sm font-semibold tracking-[-0.03em] text-ink">ECOllector</p>
-            <p className="text-xs text-slate-500">Smart recycling system</p>
+            <p className="text-xs text-[#27292b]">Smart recycling system</p>
           </div>
         </div>
 
-        <nav className="hidden items-center gap-8 text-sm text-slate-600 md:flex">
+        <nav className="hidden items-center gap-8 text-sm text-[#27292b] md:flex">
           {navItems.map((item) => (
             <a key={item.label} href={item.href} className="transition hover:text-ink">
               {item.label}

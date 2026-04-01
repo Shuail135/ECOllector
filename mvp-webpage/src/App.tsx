@@ -16,7 +16,7 @@ function App() {
   const heroOpacity = useTransform(scrollYProgress, [0, 0.16], [1, 0.92]);
 
   return (
-    <div className="pb-10">
+    <div id="top" className="pb-10">
       <motion.div
         className="fixed left-0 right-0 top-0 z-50 h-1 origin-left bg-gradient-to-r from-plastic via-paper to-garbage"
         style={{ scaleX: scrollYProgress }}

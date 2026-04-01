@@ -3,29 +3,33 @@ export type FeatureCardIcon = "ai" | "route" | "chart" | "target";
 export type WorkflowCardIcon = "camera" | "ai" | "route" | "chart";
 
 export const navItems = [
+  { label: "Home", href: "#top" },
   { label: "Problem", href: "#problem" },
   { label: "Solution", href: "#solution" },
+  { label: "Features", href: "#features" },
   { label: "Architecture", href: "#architecture" },
   { label: "Dashboard", href: "#dashboard" },
+  { label: "Impact", href: "#impact" },
+  { label: "CTA", href: "#final-cta" },
 ];
 
 export const problemCards = [
   {
     label: "User decision",
     description:
-      "Most disposal decisions happen in seconds, so users often sort by assumption instead of material type.",
+      "Most disposal decisions happen in seconds, leading to sorting based on assumption instead of material type.",
     icon: "confusion" as const,
   },
   {
     label: "Contamination",
     description:
-      "That guesswork contaminates waste streams, reduces sorting consistency, and lowers recovery quality downstream.",
+      "Incorrect sorting contaminates waste streams, reducing recovery quality and increasing downstream processing costs.",
     icon: "error" as const,
   },
   {
     label: "Visibility gap",
     description:
-      "Without live tracking, facilities cannot see usage patterns, sorting accuracy, or disposal behavior in real time.",
+      "Without live tracking, facilities cannot monitor usage patterns, sorting accuracy, or system performance.",
     icon: "data" as const,
   },
 ];
@@ -34,9 +38,9 @@ export const solutionCapabilityCards = [
   {
     step: "01",
     eyebrow: "Detection",
-    title: "Perception",
+    title: "Detection",
     description:
-      "Captures each disposal event in real time and turns it into a clean input for the system.",
+      "Captures each disposal event in real time and converts it into structured input for the system.",
     tone: "bg-plastic/[0.07]",
     badgeTone: "bg-plastic/10 text-plastic",
     icon: "camera" as SolutionCardIcon,
@@ -44,29 +48,29 @@ export const solutionCapabilityCards = [
   {
     step: "02",
     eyebrow: "Classification",
-    title: "Decision",
+    title: "Classification",
     description:
-      "Classifies material instantly and produces the routing decision needed for automated sorting.",
+      "Identifies material type instantly and determines the correct routing decision.",
     tone: "bg-paper/[0.07]",
     badgeTone: "bg-paper/10 text-paper",
     icon: "ai" as SolutionCardIcon,
   },
   {
     step: "03",
-    eyebrow: "Sorting",
+    eyebrow: "Actuation",
     title: "Actuation",
     description:
-      "Executes the correct sorting action automatically through servo-based mechanical routing.",
+      "Executes sorting automatically through a servo-based mechanical system.",
     tone: "bg-garbage/[0.07]",
     badgeTone: "bg-garbage/10 text-garbage",
     icon: "route" as SolutionCardIcon,
   },
   {
     step: "04",
-    eyebrow: "Analytics",
+    eyebrow: "Visibility",
     title: "Visibility",
     description:
-      "Logs every event to the dashboard for live visibility into volume, accuracy, and usage patterns.",
+      "Logs every event to a live dashboard with insights into volume, accuracy, and usage patterns.",
     tone: "bg-slate-900/[0.035]",
     badgeTone: "bg-slate-900/5 text-ink",
     icon: "chart" as SolutionCardIcon,
@@ -112,31 +116,31 @@ export const workflowCards = [
 
 export const featureCards = [
   {
-    eyebrow: "Reliability",
-    title: "Reliable sorting",
+    eyebrow: "Reliable sorting",
+    title: "Reliable sorting decisions",
     description:
-      "Ensures consistent sorting decisions every time, removing reliance on user judgment.",
+      "Consistently classifies materials without relying on user judgment.",
     icon: "ai" as FeatureCardIcon,
   },
   {
-    eyebrow: "Quality",
-    title: "Reduced contamination",
+    eyebrow: "Cleaner streams",
+    title: "Reduced contamination at source",
     description:
-      "Keeps materials in the correct stream, improving sorting quality at the source.",
+      "Improves recycling stream quality before waste enters processing systems.",
     icon: "route" as FeatureCardIcon,
   },
   {
-    eyebrow: "Monitoring",
-    title: "Real-time visibility",
+    eyebrow: "Live visibility",
+    title: "Live operational visibility",
     description:
-      "Tracks every sorting event with live insight into usage, confidence, and behavior.",
+      "Tracks sorting events and system performance in real time.",
     icon: "chart" as FeatureCardIcon,
   },
   {
-    eyebrow: "Validation",
-    title: "Verified accuracy",
+    eyebrow: "Verified results",
+    title: "Verified classification accuracy",
     description:
-      "Validates system performance through recorded classification results.",
+      "Logs and validates results across every sorting event.",
     icon: "target" as FeatureCardIcon,
   },
 ];
@@ -151,15 +155,18 @@ export const architecture = [
 
 export const impactItems = [
   {
-    title: "Higher sustainability",
-    description: "Better separation improves recovery quality and reduces contamination.",
+    title: "Cleaner recycling streams",
+    description:
+      "Improves material separation at the source, reducing contamination and increasing recovery quality.",
   },
   {
-    title: "Less human error",
-    description: "The system standardizes sorting instead of depending on user judgment.",
+    title: "Consistent sorting decisions",
+    description:
+      "Removes reliance on user judgment with real-time classification and automated routing.",
   },
   {
-    title: "Better efficiency",
-    description: "Live data exposes volume patterns, usage trends, and operational performance.",
+    title: "Actionable facility data",
+    description:
+      "Provides live insights into usage patterns, sorting accuracy, and operational performance.",
   },
 ];
