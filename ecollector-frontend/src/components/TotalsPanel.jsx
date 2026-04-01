@@ -1,114 +1,252 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
 import { TIME_WINDOWS } from "../lib/timeRanges";
 
-function Stat({ title, value, pct, ring }) {
+function Stat({ title, value, pct, tone, progress }) {
     return (
-        <div className="card p-4 bg-white dark:bg-[#3a3a3a] ring shadow ring-gray-900/5 dark:ring-white/10 rounded-xl">
-            <div className="flex items-start justify-between">
-                <h3 className="text-sm font-medium text-gray-600 dark:text-gray-300">
-                    {title}
-                </h3>
-                <span className="text-xs px-2 py-0.5 rounded bg-white/60 dark:bg-white/10 border border-white/50 dark:border-white/10 text-gray-700 dark:text-gray-300">
-          {pct}%
-        </span>
+        <motion.div
+                    className={`group rounded-[1.5rem] border p-5 transition-transform duration-200 hover:-translate-y-0.5 ${tone}`}
+            whileHover={{ y: -3, boxShadow: "0 22px 34px rgba(15, 23, 42, 0.08)" }}
+            transition={{ duration: 0.18, ease: "easeOut" }}
+        >
+            <div className="flex items-start justify-between gap-4">
+                <div>
+                    <p className="ui-label text-xs uppercase tracking-[0.18em]">
+                        Material
+                    </p>
+                    <h3 className="ui-heading mt-2 text-base">
+                        {title}
+                    </h3>
+                </div>
+                <span className="subtle-surface ui-value rounded-full px-3 py-1 text-xs">
+                    {pct}%
+                </span>
             </div>
 
-            <div className="mt-3 flex items-end justify-between">
-                <div className="text-3xl font-semibold text-gray-900 dark:text-white">
-                    {value}
-                </div>
-
-                <div className="relative h-8 w-24">
-                    <div className="absolute inset-0 rounded-full bg-gradient-to-r from-gray-200 to-gray-100 dark:from-white/10 dark:to-white/5 overflow-hidden">
-                        <div className={`h-full ${ring}`} style={{ width: `${pct}%` }} />
+            <div className="mt-8 flex items-end justify-between gap-4">
+                <div>
+                    <div className="ui-value text-4xl tracking-[-0.04em]">
+                        {value}
                     </div>
+                    <p className="ui-subtitle mt-2 text-sm">
+                        Items in the active range
+                    </p>
                 </div>
             </div>
+
+            <div className="mt-6">
+                <div className="soft-progress h-3.5">
+                    <motion.span
+                        className={progress}
+                        initial={{ width: 0 }}
+                        animate={{ width: `${pct}%` }}
+                        transition={{ duration: 0.62, ease: [0.22, 1, 0.36, 1] }}
+                    />
+                </div>
+            </div>
+        </motion.div>
+    );
+}
+
+function RangeMenu({ current, open, setOpen, onChangeRange }) {
+    return (
+        <div className="relative">
+            <motion.button
+                type="button"
+                onClick={() => setOpen((o) => !o)}
+                className="control-button"
+                aria-haspopup="listbox"
+                aria-expanded={open}
+                whileHover={{ y: -1.5 }}
+                whileTap={{ scale: 0.985 }}
+                transition={{ duration: 0.16, ease: "easeOut" }}
+            >
+                <span className="ui-label text-xs uppercase tracking-[0.18em]">
+                    Range
+                </span>
+                <span>{current.label}</span>
+                <svg className="h-4 w-4 opacity-70" viewBox="0 0 20 20" fill="currentColor">
+                    <path
+                        fillRule="evenodd"
+                        d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 011.08 1.04l-4.25 4.25a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z"
+                        clipRule="evenodd"
+                    />
+                </svg>
+            </motion.button>
+
+            <AnimatePresence>
+                {open && (
+                    <motion.div
+                        className="menu-surface absolute right-0 z-10 mt-3 w-52 p-2"
+                        role="listbox"
+                        initial={{ opacity: 0, y: 8, scale: 0.98 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 6, scale: 0.985 }}
+                        transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
+                    >
+                        <ul className="space-y-1">
+                            {TIME_WINDOWS.map((w) => {
+                                const active = w.key === current.key;
+                                return (
+                                    <li key={w.key}>
+                                        <motion.button
+                                            type="button"
+                                            className={
+                                                "w-full rounded-xl px-3 py-2.5 text-left text-sm font-medium transition " +
+                                                (active
+                                                ? "bg-slate-900 text-white dark:bg-[#4F46E5] dark:text-white"
+                                                : "text-[#334155] hover:bg-slate-100 dark:text-[#CBD5F5] dark:hover:bg-slate-800/80")
+                                            }
+                                            onClick={() => {
+                                                onChangeRange(w.key);
+                                                setOpen(false);
+                                            }}
+                                            role="option"
+                                            aria-selected={active}
+                                            whileHover={{ x: 2 }}
+                                            transition={{ duration: 0.14, ease: "easeOut" }}
+                                        >
+                                            {w.label}
+                                        </motion.button>
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 }
 
 export default function TotalsPanel({ totals, pct, selectedRangeKey, onChangeRange }) {
     const [open, setOpen] = useState(false);
-
-    // safe defaults for first render
-    const safeTotals = totals ?? { garbage: 0, paper: 0, plastic: 0 };
+    const menuRef = useRef(null);
+    const safeTotals = totals ?? { garbage: 0, paper: 0, plastic: 0, all: 0 };
     const safePct = pct ?? { garbage: 0, paper: 0, plastic: 0 };
 
-    // safer fallback
     const current =
         TIME_WINDOWS.find((w) => w.key === selectedRangeKey) ??
         TIME_WINDOWS.find((w) => w.key === "24h") ??
         TIME_WINDOWS[0];
 
+    useEffect(() => {
+        if (!open) return undefined;
+
+        const handleKeyDown = (event) => {
+            if (event.key === "Escape") {
+                setOpen(false);
+            }
+        };
+
+        const handleMouseDown = (event) => {
+            if (!menuRef.current?.contains(event.target)) {
+                setOpen(false);
+            }
+        };
+
+        window.addEventListener("keydown", handleKeyDown);
+        window.addEventListener("mousedown", handleMouseDown);
+        return () => {
+            window.removeEventListener("keydown", handleKeyDown);
+            window.removeEventListener("mousedown", handleMouseDown);
+        };
+    }, [open]);
+
     return (
-        <div className="card p-5 bg-white dark:bg-[#3a3a3a] ring shadow ring-gray-900/5 dark:ring-white/10 rounded-xl relative">
-            <div className="flex items-center justify-between mb-4">
-                <h2 className="section-title">Totals</h2>
+        <motion.div
+            className="panel-surface panel-surface-tertiary flex h-full flex-col p-6 md:p-7"
+            whileHover={{ y: -2, boxShadow: "0 18px 34px rgba(15, 23, 42, 0.08)" }}
+            transition={{ duration: 0.22, ease: "easeOut" }}
+        >
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                <div>
+                    <span className="section-kicker">Distribution</span>
+                    <h2 className="ui-heading mt-4 text-3xl font-extrabold tracking-[-0.04em]">
+                        Material Distribution
+                    </h2>
+                    <p className="ui-subtitle mt-2 max-w-xl text-sm leading-6">
+                        Compare category volume inside the selected time window and spot shifts in incoming material mix.
+                    </p>
+                </div>
 
-                <div className="relative">
-                    <button
-                        type="button"
-                        onClick={() => setOpen((o) => !o)}
-                        className="inline-flex items-center gap-2 rounded-md border border-gray-300 dark:border-white/10 bg-white/70 dark:bg-white/10 px-3 py-1.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-white/90 dark:hover:bg-white/20 transition"
-                        aria-haspopup="listbox"
-                        aria-expanded={open}
-                    >
-                        {current.label}
-                        <svg className="h-4 w-4 opacity-70" viewBox="0 0 20 20" fill="currentColor">
-                            <path
-                                fillRule="evenodd"
-                                d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 011.08 1.04l-4.25 4.25a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z"
-                                clipRule="evenodd"
-                            />
-                        </svg>
-                    </button>
-
-                    {open && (
-                        <div
-                            className="absolute right-0 mt-2 w-48 rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#2f2f2f] shadow-lg z-10"
-                            role="listbox"
-                        >
-                            <ul className="py-1">
-                                {TIME_WINDOWS.map((w) => {
-                                    const active = w.key === current.key;
-                                    return (
-                                        <li key={w.key}>
-                                            <button
-                                                type="button"
-                                                className={
-                                                    "w-full text-left px-3 py-2 text-sm transition " +
-                                                    (active
-                                                        ? "bg-blue-600 text-white"
-                                                        : "text-gray-800 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-white/10")
-                                                }
-                                                onClick={() => {
-                                                    onChangeRange(w.key);
-                                                    setOpen(false);
-                                                }}
-                                                role="option"
-                                                aria-selected={active}
-                                            >
-                                                {w.label}
-                                            </button>
-                                        </li>
-                                    );
-                                })}
-                            </ul>
-                        </div>
-                    )}
+                <div ref={menuRef}>
+                    <RangeMenu
+                        current={current}
+                        open={open}
+                        setOpen={setOpen}
+                        onChangeRange={onChangeRange}
+                    />
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <Stat title="Garbage" value={safeTotals.garbage} pct={safePct.garbage} ring="bg-green-400" />
-                <Stat title="Paper" value={safeTotals.paper} pct={safePct.paper} ring="bg-orange-400" />
-                <Stat title="Plastic" value={safeTotals.plastic} pct={safePct.plastic} ring="bg-blue-400" />
+            <motion.div
+                className="mt-6 rounded-[1.65rem] border border-[#E2E8F0] bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(241,245,249,0.96))] p-6 shadow-[0_18px_34px_rgba(15,23,42,0.06)] dark:border-white/10 dark:bg-[linear-gradient(180deg,rgba(30,41,59,0.88),rgba(15,23,42,0.88))] dark:shadow-none md:p-7"
+                whileHover={{ y: -2 }}
+                transition={{ duration: 0.18, ease: "easeOut" }}
+            >
+                <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+                    <div className="max-w-xl">
+                        <p className="ui-meta text-[0.68rem] uppercase tracking-[0.18em]">
+                            Active window
+                        </p>
+                        <div className="mt-3 flex items-end gap-3">
+                            <p className="ui-value text-5xl leading-none tracking-[-0.06em] md:text-6xl">
+                            {safeTotals.all ?? safeTotals.garbage + safeTotals.paper + safeTotals.plastic}
+                            </p>
+                            <span className="mb-1 rounded-full border border-[#C7D2FE] bg-[#EEF2FF] px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.16em] text-[#4F46E5] dark:border-[#4F46E5]/20 dark:bg-[#4F46E5]/14 dark:text-[#C7D2FE]">
+                                Total detections
+                            </span>
+                        </div>
+                        <p className="ui-subtitle mt-4 text-sm leading-6">
+                            Total detections recorded for {current.label.toLowerCase()}.
+                        </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 lg:min-w-[360px]">
+                        <div className="rounded-[1.2rem] border border-[#E2E8F0] bg-white/90 px-4 py-4 shadow-[0_8px_18px_rgba(15,23,42,0.04)] dark:border-white/10 dark:bg-slate-900/60 dark:shadow-none">
+                            <p className="ui-meta text-[0.68rem] uppercase tracking-[0.16em]">Garbage</p>
+                            <p className="ui-value mt-2 text-xl tracking-[-0.03em]">{safePct.garbage}%</p>
+                        </div>
+                        <div className="rounded-[1.2rem] border border-[#E2E8F0] bg-white/90 px-4 py-4 shadow-[0_8px_18px_rgba(15,23,42,0.04)] dark:border-white/10 dark:bg-slate-900/60 dark:shadow-none">
+                            <p className="ui-meta text-[0.68rem] uppercase tracking-[0.16em]">Paper</p>
+                            <p className="ui-value mt-2 text-xl tracking-[-0.03em]">{safePct.paper}%</p>
+                        </div>
+                        <div className="rounded-[1.2rem] border border-[#E2E8F0] bg-white/90 px-4 py-4 shadow-[0_8px_18px_rgba(15,23,42,0.04)] dark:border-white/10 dark:bg-slate-900/60 dark:shadow-none">
+                            <p className="ui-meta text-[0.68rem] uppercase tracking-[0.16em]">Plastic</p>
+                            <p className="ui-value mt-2 text-xl tracking-[-0.03em]">{safePct.plastic}%</p>
+                        </div>
+                    </div>
+                </div>
+            </motion.div>
+
+            <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
+                <Stat
+                    title="Garbage"
+                    value={safeTotals.garbage}
+                    pct={safePct.garbage}
+                    tone="border-[#10B981]/18 bg-gradient-to-br from-[#ECFDF5] to-[#FFFFFF] dark:border-[#10B981]/15 dark:from-[#10B981]/8 dark:to-white/4"
+                    progress="bg-gradient-to-r from-[#34D399] via-[#10B981] to-[#059669]"
+                />
+                <Stat
+                    title="Paper"
+                    value={safeTotals.paper}
+                    pct={safePct.paper}
+                    tone="border-[#F59E0B]/18 bg-gradient-to-br from-[#FFFBEB] to-[#FFFFFF] dark:border-[#F59E0B]/15 dark:from-[#F59E0B]/8 dark:to-white/4"
+                    progress="bg-gradient-to-r from-[#FBBF24] via-[#F59E0B] to-[#D97706]"
+                />
+                <Stat
+                    title="Plastic"
+                    value={safeTotals.plastic}
+                    pct={safePct.plastic}
+                    tone="border-[#3B82F6]/18 bg-gradient-to-br from-[#EFF6FF] to-[#FFFFFF] dark:border-[#3B82F6]/15 dark:from-[#3B82F6]/8 dark:to-white/4"
+                    progress="bg-gradient-to-r from-[#60A5FA] via-[#3B82F6] to-[#2563EB]"
+                />
             </div>
 
-            <p className="mt-4 text-xs text-gray-500 dark:text-gray-400">
+            <p className="ui-label mt-auto pt-5 text-xs uppercase tracking-[0.14em]">
                 Totals are computed from history within the selected time range.
             </p>
-        </div>
+        </motion.div>
     );
 }

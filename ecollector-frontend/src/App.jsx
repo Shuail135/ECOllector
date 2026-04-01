@@ -24,7 +24,7 @@ export default function App() {
     }, [dark]);
 
     return (
-        <div className="min-h-screen bg-white text-gray-900 dark:bg-[#2b2b2b] dark:text-gray-100 transition-colors">
+        <div className="dashboard-shell min-h-screen text-slate-900 transition-colors dark:text-slate-100">
             <Dashboard dark={dark} toggleDark={() => setDark((v) => !v)} />
         </div>
     );
