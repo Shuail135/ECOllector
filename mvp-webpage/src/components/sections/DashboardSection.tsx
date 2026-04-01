@@ -15,8 +15,8 @@ function DashboardSection() {
     >
       <SectionIntro
         eyebrow="Dashboard Preview"
-        title="Operational visibility after every sorting event"
-        description="The dashboard displays material counts, confidence levels, recent history, and system status in real time."
+        title="Real-time operational visibility"
+        description="Monitor classification accuracy, system activity, and material flow as it happens."
       />
       <motion.div className="mt-12" variants={fadeUp}>
         <DashboardMock />

@@ -27,9 +27,9 @@ type DashboardEvent = {
   materialLabel: string;
   confidence: number | null;
   confidenceLabel: string;
-  routePath: string;
-  processingTime: string;
-  systemState: string;
+  routePath: string | null;
+  processingTime: string | null;
+  systemState: string | null;
   timestamp: number | null;
   timestampLabel: string;
 };
@@ -54,7 +54,36 @@ export type DashboardPreviewState = {
   trackedSignals: Array<{ label: string; value: string }>;
   isLoading: boolean;
   isConfigured: boolean;
+  sourceLabel: string;
+  lastUpdatedLabel: string;
+  errorLabel: string | null;
 };
+
+function buildTrackedSignals(
+  counts: DashboardCounts,
+  averageConfidence: number | null,
+  historyEventCount: number,
+  latestEvent: DashboardEvent | null,
+) {
+  return [
+    {
+      label: "Event volume",
+      value: counts.total > 0 ? `${counts.total} logged` : "No events yet",
+    },
+    {
+      label: "Confidence average",
+      value: averageConfidence === null ? "No score yet" : `${averageConfidence}% avg`,
+    },
+    {
+      label: "Latest material",
+      value: latestEvent?.materialLabel ?? "Awaiting event",
+    },
+    {
+      label: "History entries",
+      value: historyEventCount > 0 ? `${historyEventCount} stored` : "No history yet",
+    },
+  ];
+}
 
 const emptyCounts: DashboardCounts = {
   plastic: 0,
@@ -221,7 +250,7 @@ function normalizeProcessingTime(event: RawDetection) {
     toNumber(event.processingTimeMs) ?? toNumber(event.processingMs) ?? toNumber(event.processingTime);
 
   if (msValue === null) {
-    return "Auto";
+    return null;
   }
 
   if (msValue >= 1000) {
@@ -231,34 +260,20 @@ function normalizeProcessingTime(event: RawDetection) {
   return `${Math.round(msValue)}ms`;
 }
 
-function normalizeRoutePath(event: RawDetection, material: MaterialType) {
+function normalizeRoutePath(event: RawDetection) {
   const rawValue = event.routePath ?? event.route ?? event.path;
   if (typeof rawValue === "string" && rawValue.trim()) {
     return rawValue.trim();
   }
-
-  if (material === "plastic") {
-    return "Plastic lane";
-  }
-
-  if (material === "paper") {
-    return "Paper lane";
-  }
-
-  return "Garbage lane";
+  return null;
 }
 
-function normalizeState(event: RawDetection, timestamp: number | null) {
+function normalizeState(event: RawDetection) {
   const rawValue = event.state ?? event.status;
   if (typeof rawValue === "string" && rawValue.trim()) {
     return rawValue.trim();
   }
-
-  if (!timestamp) {
-    return "Waiting for input";
-  }
-
-  return Date.now() - timestamp < 5 * 60 * 1000 ? "Live" : "Idle";
+  return null;
 }
 
 function normalizeTimestampLabel(event: RawDetection, timestamp: number | null) {
@@ -289,9 +304,9 @@ function normalizeEvent(id: string, event: RawDetection): DashboardEvent {
     materialLabel: formatMaterialLabel(materialKey, event.type ?? event.material ?? event.label),
     confidence,
     confidenceLabel: confidence === null ? "Awaiting confidence" : `${confidence}% confidence`,
-    routePath: normalizeRoutePath(event, materialKey),
+    routePath: normalizeRoutePath(event),
     processingTime: normalizeProcessingTime(event),
-    systemState: normalizeState(event, timestamp),
+    systemState: normalizeState(event),
     timestamp,
     timestampLabel: normalizeTimestampLabel(event, timestamp),
   };
@@ -337,23 +352,72 @@ function formatLastReset(value: unknown) {
   }).format(timestamp);
 }
 
+function formatLastUpdated(timestamp: number | null) {
+  if (!timestamp) {
+    return "No live event yet";
+  }
+
+  const elapsedMs = Date.now() - timestamp;
+  if (elapsedMs < 60_000) {
+    return "Updated just now";
+  }
+
+  const elapsedMinutes = Math.round(elapsedMs / 60_000);
+  if (elapsedMinutes < 60) {
+    return `Updated ${elapsedMinutes}m ago`;
+  }
+
+  return `Updated ${new Intl.DateTimeFormat("en-CA", {
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  }).format(timestamp)}`;
+}
+
+function formatFirebaseError(error: unknown) {
+  const message =
+    typeof error === "object" && error !== null && "message" in error
+      ? String((error as { message?: unknown }).message ?? "")
+      : "";
+  const code =
+    typeof error === "object" && error !== null && "code" in error
+      ? String((error as { code?: unknown }).code ?? "")
+      : "";
+
+  if (code.includes("permission-denied") || message.toLowerCase().includes("permission")) {
+    return "Firebase connected, but database reads are blocked by your Realtime Database rules.";
+  }
+
+  return "Unable to read live Firebase data right now.";
+}
+
 function useRealtimeValue(reference: DatabaseReference | null) {
   const [value, setValue] = useState<unknown>(undefined);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!reference) {
       setValue(undefined);
+      setError(null);
       return;
     }
 
-    const unsubscribe = onValue(reference, (snapshot) => {
-      setValue(snapshot.val());
-    });
+    const unsubscribe = onValue(
+      reference,
+      (snapshot) => {
+        setValue(snapshot.val());
+        setError(null);
+      },
+      (firebaseError) => {
+        setError(formatFirebaseError(firebaseError));
+      },
+    );
 
     return () => unsubscribe();
   }, [reference]);
 
-  return value;
+  return { value, error };
 }
 
 export function useDashboardPreview(): DashboardPreviewState {
@@ -376,13 +440,16 @@ export function useDashboardPreview(): DashboardPreviewState {
     [database],
   );
 
-  const currentValue = useRealtimeValue(currentRef);
-  const historyValue = useRealtimeValue(historyRef);
-  const totalsValue = useRealtimeValue(totalsRef);
-  const lastResetValue = useRealtimeValue(lastResetRef);
+  const { value: currentValue, error: currentError } = useRealtimeValue(currentRef);
+  const { value: historyValue, error: historyError } = useRealtimeValue(historyRef);
+  const { value: totalsValue, error: totalsError } = useRealtimeValue(totalsRef);
+  const { value: lastResetValue, error: lastResetError } = useRealtimeValue(lastResetRef);
+  const isUsingDemoData = !hasFirebaseConfig;
 
-  const recentEvents = useMemo(() => normalizeHistory(historyValue).slice(0, 7), [historyValue]);
-  const effectiveRecentEvents = recentEvents.length > 0 ? recentEvents : fallbackEvents;
+  const historyEvents = useMemo(() => normalizeHistory(historyValue), [historyValue]);
+  const recentEvents = useMemo(() => historyEvents.slice(0, 7), [historyEvents]);
+  const effectiveRecentEvents =
+    recentEvents.length > 0 ? recentEvents : isUsingDemoData ? fallbackEvents : [];
 
   const latestEvent = useMemo(() => {
     if (currentValue && typeof currentValue === "object") {
@@ -398,11 +465,11 @@ export function useDashboardPreview(): DashboardPreviewState {
       return totals;
     }
 
-    if (recentEvents.length === 0) {
-      return fallbackCounts;
+    if (historyEvents.length === 0) {
+      return isUsingDemoData ? fallbackCounts : { ...emptyCounts };
     }
 
-    return recentEvents.reduce<DashboardCounts>(
+    return historyEvents.reduce<DashboardCounts>(
       (accumulator, event) => {
         accumulator[event.materialKey] += 1;
         accumulator.total += 1;
@@ -410,7 +477,7 @@ export function useDashboardPreview(): DashboardPreviewState {
       },
       { ...emptyCounts },
     );
-  }, [recentEvents, totalsValue]);
+  }, [historyEvents, isUsingDemoData, totalsValue]);
 
   const averageConfidence = useMemo(() => {
     const withConfidence = effectiveRecentEvents.filter(
@@ -439,8 +506,12 @@ export function useDashboardPreview(): DashboardPreviewState {
     totalsValue !== undefined ||
     lastResetValue !== undefined;
 
+  const errorLabel = currentError ?? historyError ?? totalsError ?? lastResetError;
+
   const onlineLabel = !hasFirebaseConfig
     ? "System online"
+    : errorLabel
+      ? "Read blocked"
     : latestEvent
       ? Date.now() - (latestEvent.timestamp ?? 0) < 5 * 60 * 1000
         ? "System online"
@@ -451,24 +522,28 @@ export function useDashboardPreview(): DashboardPreviewState {
 
   const onlineTone = !hasFirebaseConfig
     ? "bg-garbage/10 text-garbage"
+    : errorLabel
+      ? "bg-paper/10 text-paper"
     : onlineLabel === "System online"
       ? "bg-garbage/10 text-garbage"
       : "bg-slate-100 text-slate-600";
 
-  const trackedSignals = [
-    {
-      label: "Material counts",
-      value: counts.total > 0 ? "Live totals" : "Live totals",
-    },
-    {
-      label: "Confidence scores",
-      value: averageConfidence === null ? "94% avg" : `${averageConfidence}% avg`,
-    },
-    {
-      label: "History logs",
-      value: effectiveRecentEvents.length > 0 ? `${effectiveRecentEvents.length} recent` : "7 recent",
-    },
-  ];
+  const trackedSignals = buildTrackedSignals(
+    counts,
+    averageConfidence,
+    historyEvents.length,
+    latestEvent,
+  );
+
+  const sourceLabel = !hasFirebaseConfig
+    ? "Demo data"
+    : errorLabel
+      ? "Firebase error"
+    : historyEvents.length > 0 || currentValue
+      ? "Firebase live data"
+      : hasAnySnapshot
+        ? "Firebase connected"
+        : "Connecting to Firebase";
 
   return {
     counts,
@@ -482,5 +557,8 @@ export function useDashboardPreview(): DashboardPreviewState {
     trackedSignals,
     isLoading: hasFirebaseConfig && !hasAnySnapshot,
     isConfigured: hasFirebaseConfig,
+    sourceLabel,
+    lastUpdatedLabel: formatLastUpdated(latestEvent?.timestamp ?? null),
+    errorLabel,
   };
 }

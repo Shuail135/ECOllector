@@ -6,9 +6,9 @@ type FirebaseConfig = {
   authDomain: string;
   databaseURL: string;
   projectId: string;
-  storageBucket: string;
-  messagingSenderId: string;
-  appId: string;
+  storageBucket?: string;
+  messagingSenderId?: string;
+  appId?: string;
   measurementId?: string;
 };
 
@@ -28,9 +28,6 @@ const requiredConfigKeys: Array<keyof FirebaseConfig> = [
   "authDomain",
   "databaseURL",
   "projectId",
-  "storageBucket",
-  "messagingSenderId",
-  "appId",
 ];
 
 export const hasFirebaseConfig = requiredConfigKeys.every((key) => Boolean(firebaseConfig[key]));
