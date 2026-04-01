@@ -1,0 +1,112 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  @keyframes status-pulse {
+    0%,
+    100% {
+      transform: scale(1);
+      opacity: 0.9;
+      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.28);
+    }
+
+    50% {
+      transform: scale(1.08);
+      opacity: 1;
+      box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
+    }
+  }
+
+  @keyframes architecture-flow {
+    0% {
+      background-position: 0% 50%;
+      opacity: 0.45;
+    }
+
+    50% {
+      background-position: 100% 50%;
+      opacity: 0.7;
+    }
+
+    100% {
+      background-position: 0% 50%;
+      opacity: 0.45;
+    }
+  }
+
+  @keyframes architecture-arrow-flow {
+    0% {
+      background-position: 0% 50%;
+      opacity: 0.45;
+    }
+
+    50% {
+      background-position: 100% 50%;
+      opacity: 0.7;
+    }
+
+    100% {
+      background-position: 0% 50%;
+      opacity: 0.45;
+    }
+  }
+
+  @keyframes architecture-ambient {
+    0%,
+    100% {
+      opacity: 0.05;
+      transform: scale(1);
+    }
+
+    50% {
+      opacity: 0.11;
+      transform: scale(1.03);
+    }
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-shell text-ink antialiased;
+    background-image:
+      radial-gradient(circle at top left, rgba(59, 130, 246, 0.10), transparent 24%),
+      radial-gradient(circle at 85% 14%, rgba(16, 185, 129, 0.10), transparent 24%),
+      linear-gradient(180deg, #f8fbfc 0%, #f3f6f7 100%);
+  }
+}
+
+@layer components {
+  .section-shell {
+    @apply mx-auto w-full max-w-7xl px-6 md:px-8;
+  }
+
+  .section-copy {
+    @apply mx-auto max-w-3xl text-center;
+  }
+
+  .eyebrow {
+    @apply inline-flex items-center gap-3 text-xs font-bold uppercase tracking-[0.24em] text-slate-600;
+  }
+
+  .eyebrow::before {
+    content: "";
+    @apply h-px w-8 bg-current opacity-50;
+  }
+
+  .panel {
+    @apply rounded-[28px] border border-slate-200 bg-white shadow-soft backdrop-blur;
+  }
+
+  .primary-cta {
+    @apply inline-flex min-h-12 items-center justify-center rounded-full bg-slate-950 px-6 text-sm font-semibold text-white shadow-[0_14px_30px_rgba(15,23,42,0.18)] transition duration-300 ease-out hover:-translate-y-0.5 hover:scale-[1.015] hover:bg-black hover:shadow-[0_18px_38px_rgba(15,23,42,0.24)];
+  }
+
+  .secondary-cta {
+    @apply inline-flex min-h-12 items-center justify-center rounded-full border border-slate-300 bg-white px-6 text-sm font-semibold text-ink transition hover:-translate-y-0.5;
+  }
+}
