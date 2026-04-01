@@ -11,7 +11,7 @@ function ProductHeroMedia() {
             <div className="relative overflow-hidden rounded-[22px] bg-slate-100">
               <div className="pointer-events-none absolute left-4 top-4 z-10 inline-flex items-center gap-2 rounded-full border border-slate-900/10 bg-slate-950/88 px-4 py-2.5 text-xs font-bold uppercase tracking-[0.24em] text-white shadow-[0_14px_36px_rgba(15,23,42,0.34)] backdrop-blur-md ring-1 ring-white/12">
                 <span className="h-2.5 w-2.5 animate-[status-pulse_2.8s_ease-in-out_infinite] rounded-full bg-garbage shadow-[0_0_12px_rgba(16,185,129,0.85)]" />
-                Live Prototype Demo
+                Prototype Demo
               </div>
 
               <video

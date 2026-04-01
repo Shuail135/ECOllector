@@ -39,7 +39,7 @@ function HeroSection({ heroOpacity, heroYOffset }: HeroSectionProps) {
           Built with computer vision and embedded control systems. Prototype tested in real environments.
         </p>
 
-        <div className="mt-10 grid gap-3 sm:grid-cols-3">
+        <div className="mt-10 grid gap-2 sm:grid-cols-3">
           <StatPill
             label="Capability"
             value="Real-time classification"

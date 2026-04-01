@@ -80,7 +80,6 @@ function DashboardMock() {
               ) : null}
               {!isConfigured ? (
                 <p className="mt-3 text-xs text-slate-500">
-                  Add your `VITE_FIREBASE_*` values in `mvp-webpage/.env` to replace demo data with live telemetry.
                 </p>
               ) : null}
             </div>

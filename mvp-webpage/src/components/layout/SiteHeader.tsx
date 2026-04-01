@@ -57,8 +57,8 @@ function SiteHeader() {
       <div
         className={`flex items-center justify-between gap-4 rounded-full px-6 py-4 transition-all duration-300 ease-out ${
           isScrolled
-            ? "border border-slate-200/90 bg-white/88 shadow-[0_18px_42px_rgba(15,23,42,0.10)] backdrop-blur-xl"
-            : "border border-slate-200/60 bg-white/62 shadow-[0_8px_24px_rgba(15,23,42,0.04)] backdrop-blur-md"
+            ? "border border-slate-200/90 bg-white/95 shadow-[0_18px_42px_rgba(15,23,42,0.10)] backdrop-blur-xl"
+            : "border border-slate-200/60 bg-white/75 shadow-[0_8px_24px_rgba(15,23,42,0.04)] backdrop-blur-md"
         }`}
       >
         <div className="flex items-center gap-3">
@@ -88,8 +88,8 @@ function SiteHeader() {
           ))}
         </nav>
 
-        <a href="#prototype" className="primary-cta hidden md:inline-flex">
-          View Demo
+        <a href="https://ecollector-webapp.vercel.app/" className="primary-cta hidden md:inline-flex">
+          View Live Dashboard
         </a>
       </div>
       </div>
