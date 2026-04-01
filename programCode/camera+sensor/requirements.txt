@@ -1,0 +1,9 @@
+opencv-python
+Pillow
+pyserial
+torch
+torchvision
+SpeechRecognition
+PyAudio
+firebase-admin
+torch-directml

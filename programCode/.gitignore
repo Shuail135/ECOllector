@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.venv/
+venv/
+env/
+
+# Local environment files
+.env
+.env.*
+
+# Runtime/generated project files
+corrections/
+*.log
+
+# Model artifacts and local credentials
+*.pt
+ecollector-*-firebase-adminsdk-*.json
+
+# Arduino / editor output
+build/
+*.tmp
+*.swp
+.vscode/
+.idea/
